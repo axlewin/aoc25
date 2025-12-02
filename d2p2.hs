@@ -26,9 +26,13 @@ isBad :: Int -> Bool
 isBad n =
     let s = show n
         len = length s
-    in  even len &&
-        let (h1, h2) = splitAt (div len 2) s
-        in h1 == h2
+    in any (\patternLen ->
+        mod len patternLen == 0 &&
+        div len patternLen >= 2 &&
+        let pattern = take patternLen s
+            repeated = concat (replicate (div len patternLen) pattern)
+        in s == repeated
+        ) [1 .. div len 2]
 
 split :: Eq a => a -> [a] -> [[a]]
 split _ [] = []
